@@ -126,10 +126,10 @@ function dmenu_sshot() {
 		"Selected Region(screenshot + copy)" )
 			selected_region_sshot
 			xclip -selection clipboard -t image/png "${sshots_file}" ;;
-		"Delay(Fullscreen + screenshot + copy only)" )
+		"Delay(Fullscreen + screenshot + copy)" )
 			delay_sshot --full
 			xclip -selection clipboard -t image/png "${sshots_file}" ;;
-		"Delay(Window + screenshot + copy only)" )
+		"Delay(Window + screenshot + copy)" )
 			delay_sshot --window
 			xclip -selection clipboard -t image/png "${sshots_file}" ;;
 		"Quit" ) notify-send -t 1500 "Nothing selected for screenshot" ;;
