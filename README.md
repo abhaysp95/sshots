@@ -81,3 +81,7 @@ Here are the options supported through dmenu prompt:
 * `xdotool` -> to get the active window for screenshot
 
 `NOTE: For better usage, bind this script with options you desire to your keyboard as shortcut.`
+
+## Credits
+
+Got the idea for dmenu usage from `Derek Taylor`. Visit his repo [here](https://gitlab.com/dwt1)
