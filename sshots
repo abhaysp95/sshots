@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+set -e
+
+trap 'catch $? $LINENO' EXIT
+
 declare -a sshots_options=(
 "Fullscreen"
 "Active Window"
@@ -19,11 +23,29 @@ declare -a sshots_options=(
 "Quit"
 )
 
+declare -a dependencies_run=(
+"maim --version"
+"dmenu -v"
+"convert"  # don't know why convert --version is not working
+)
+
 quality=100
 sshots_dir="${HOME}/Pictures/Screenshots/$(date +"%Y-%m")"
 sshots_file="${sshots_dir}/$(date +"%Y-%m-%d_%H%M%S").png"
 background_frame_color="#abb2bf"
 delay_time="5"
+
+
+function catch() {
+	echo "[EE] command not found: ${checking_command}, line no. $2"
+	echo "sshots: exit $1"
+}
+
+function check_dependency() {
+	for cmd in "${dependencies_run[@]}"; do
+		eval "${cmd}" 2&>1 >/dev/null
+	done
+}
 
 function post_operation() {
 	message="$(printf "${stype} type\nScreenshot Captured")"
@@ -126,10 +148,10 @@ function dmenu_sshot() {
 		"Selected Region(screenshot + copy)" )
 			selected_region_sshot
 			xclip -selection clipboard -t image/png "${sshots_file}" ;;
-		"Delay(Fullscreen + screenshot + copy)" )
+		"Delay(Fullscreen + screenshot + copy only)" )
 			delay_sshot --full
 			xclip -selection clipboard -t image/png "${sshots_file}" ;;
-		"Delay(Window + screenshot + copy)" )
+		"Delay(Window + screenshot + copy only)" )
 			delay_sshot --window
 			xclip -selection clipboard -t image/png "${sshots_file}" ;;
 		"Quit" ) notify-send -t 1500 "Nothing selected for screenshot" ;;
@@ -174,6 +196,9 @@ function get_help() {
 	echo ""
 	echo "Assign shortcut keys(key-bindings) to the various options of this script for best usage"
 }
+
+
+check_dependency  # check the dependencies first
 
 case "$1" in
 	--dmenu|-dm  ) dmenu_sshot ;;
